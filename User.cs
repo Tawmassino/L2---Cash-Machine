@@ -16,84 +16,24 @@ namespace L2___Cash_Machine
         public string PIN { get; set; }
         public int Balance { get; set; }
         //public int TransactionHistory { get; set; }
-
-
         public int DailyLimit { get; set; }
 
 
 
         //CONSTRUCTORS
 
-        public User(string cardNumber, string pin, int balance)
+        public User(string cardNumber, string pin, int balance, int dailyLimit)
         {
             CardNumber = cardNumber;
             PIN = pin;
             Balance = balance;
-        }
-        public User(int transactionHistory, int dailyLimit)
-        {
-            //TransactionHistory = transactionHistory;
             DailyLimit = dailyLimit;
         }
 
+
         // ======================  METHODS ====================  
 
-        public bool Login()
-        {
-            bool isLoggedIn = false;
-            int attemptsToLogin = 0;
-            int maxAttemptsToLogin = 3;
 
-            do
-            {
-                Console.WriteLine("Please insert your card!");
-                string userCardInput = Console.ReadLine();
-
-                if (userCardInput == CardNumber)
-                {
-                    Console.WriteLine("Enter PIN number:");
-                    string userPin = Console.ReadLine();
-
-                    if (userPin == PIN)
-                    {
-                        isLoggedIn = true;
-                        return isLoggedIn;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Incorrect PIN. Please try again.");
-                        attemptsToLogin++;
-                    }
-                }
-                else if (userCardInput == null)
-                {
-                    Console.WriteLine("Please insert your card!");
-                }
-                else
-                {
-                    Console.WriteLine("This card is not registered");
-                    attemptsToLogin++;
-                }
-
-                if (attemptsToLogin >= maxAttemptsToLogin)
-                {
-                    KickOut();
-                    return false;
-                }
-
-            } while (attemptsToLogin < maxAttemptsToLogin);
-
-            return isLoggedIn;
-
-        }
-
-        public void KickOut()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("You've been disconnected");
-            Console.ReadLine();
-            Environment.Exit(0);
-        }
 
         public void ShowBalance()
         {
@@ -118,43 +58,71 @@ namespace L2___Cash_Machine
                     {
                         DailyLimit++;
                     }
+                    else { DailyLimit = 0; } //?reset dailylimit?
                 }
             }
             if (DailyLimit == 10)
             {
                 isLimitReached = true;
             }
+
+
             return isLimitReached;
         }
 
 
-        public void Withdraw(int howMuchWithdraw)//ar cia tas pats bool
+        public void Withdraw()
         {
+            Console.WriteLine(
+                "╔══════════════════════════════════════════╗" + "\r\n" +
+                "║           HOW MUCH TO WITHDRAW?          ║\r\n" +
+                "╚══════════════════════════════════════════╝" +
+                "");
 
-            if (howMuchWithdraw <= Balance && DailyLimitReached() == false)
+            int howMuchWithdraw = 0;
+            try
             {
-                DateTime currentTime = DateTime.Now.Date;
-                string transactionLogFile = "TransactionHistoryLog.txt";
+                howMuchWithdraw = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (FormatException ex) { Console.WriteLine(ex.Message); }
+            catch (InvalidCastException ex) { Console.WriteLine(ex.Message); }
 
-                Console.WriteLine($" Withrawing {howMuchWithdraw} from the Balance of {Balance}");
-                Balance -= howMuchWithdraw;
-                ShowBalance();
-                //TransactionHistory++;
-
-
-                DailyLimit++;
-                //log transaction
-                string logEntry = $"{currentTime:yyyy-MM-dd} - Withdrawal: ${howMuchWithdraw}, Remaining Balance: ${Balance}";
-                // Append the log entry to the transaction history file
-
-                using (StreamWriter writer = File.AppendText(transactionLogFile))
-                {
-                    writer.WriteLine(logEntry);
-                }
+            if (howMuchWithdraw > 1000)
+            {
+                Console.WriteLine("You cannot withdraw more than 1000 at once");
+            }
+            else if (howMuchWithdraw < 0)
+            {
+                Console.WriteLine("You cannot withdraw a negative ammount");
             }
             else
             {
-                Console.WriteLine("Unable withdraw. Either insufficient balance or daily limit reached.");
+
+                if (howMuchWithdraw <= Balance && DailyLimitReached() == false)
+                {
+                    DateTime currentTime = DateTime.Now.Date;
+                    string transactionLogFile = "TransactionHistoryLog.txt";
+
+                    Console.WriteLine($" Withrawing {howMuchWithdraw} from the Balance of {Balance}");
+                    Balance -= howMuchWithdraw;
+                    ShowBalance();
+                    //TransactionHistory++;
+
+
+                    DailyLimit++;
+                    //log transaction
+                    string logEntry = $"{currentTime:yyyy-MM-dd} - Withdrawal: ${howMuchWithdraw}, Remaining Balance: ${Balance}";
+                    // Append the log entry to the transaction history file
+
+                    using (StreamWriter writer = File.AppendText(transactionLogFile))
+                    {
+                        writer.WriteLine(logEntry);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Unable withdraw. Either insufficient balance or daily limit reached.");
+                }
             }
         }
 
@@ -167,7 +135,7 @@ namespace L2___Cash_Machine
                 int startIndex = logEntries.Length - 5;//imam nuo paskutines vietos #5 israsa
 
 
-                Console.WriteLine(" 5 MOST RECENT TRANSACTIONS: ");
+                Console.WriteLine("5 MOST RECENT TRANSACTIONS: ");
 
                 for (int i = startIndex; i < logEntries.Length; i++)
                 {
@@ -176,10 +144,40 @@ namespace L2___Cash_Machine
             }
         }
 
-        public void Deposit(int howMuchDeposit)
+        public void Deposit()
         {
+            Console.WriteLine(
+                "╔══════════════════════════════════════════╗" + "\r\n" +
+                "║           HOW MUCH TO DEPOSIT?           ║\r\n" +
+                "╚══════════════════════════════════════════╝" +
+                "");
 
+            int howMuchDeposit = 0;
+            try
+            {
+                howMuchDeposit = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (FormatException ex) { Console.WriteLine(ex.Message); }
+            catch (InvalidCastException ex) { Console.WriteLine(ex.Message); }
+
+            Console.WriteLine($" Depositting {howMuchDeposit} to the Balance of {Balance}");
+            Balance += howMuchDeposit;
+            ShowBalance();
+
+
+            DateTime currentTime = DateTime.Now.Date;
+            string transactionLogFile = "TransactionHistoryLog.txt";
+
+            //log transaction
+            string logEntry = $"{currentTime:yyyy-MM-dd} - Deposit: ${howMuchDeposit}, Remaining Balance: ${Balance}";
+            // Append the log entry to the transaction history file
+
+            using (StreamWriter writer = File.AppendText(transactionLogFile))
+            {
+                writer.WriteLine(logEntry);
+            }
         }
+
 
         // ================== END OF METHODS ==================
 
