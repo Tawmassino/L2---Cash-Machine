@@ -52,13 +52,13 @@ namespace L2___Cash_Machine
             #region AllUsers           
             List<User> users = new List<User>();
 
-            User currentUser = new User("X", "0000", 1500, 0);
-            User user1 = new User("X XX XXX", "0000", 1500, 0);
-            User user2 = new User("b69d8293-7b62-4520-93aa-3ece99882036", "1234", 123456789, 0);
-            User user3 = new User("8c5eb7d6-3ae3-452a-b551-283fc20d9253", "5678", 987654321, 0);
-            User user4 = new User("eb311901-4582-481a-b697-13b52e4d2349", "4321", 20231026, 0);
-            User user5 = new User("c88e180e-b996-40eb-8f38-98abc8db2ba1", "8765", 14101223, 0);
-            User user6 = new User("f3b5228d-937f-4407-af03-d0bce35ae269", "0101", 1993, 0);
+            User currentUser = new User("X", "0000", 1500);
+            User user1 = new User("X XX XXX", "0000", 1500);
+            User user2 = new User("b69d8293-7b62-4520-93aa-3ece99882036", "1234", 123456789);
+            User user3 = new User("8c5eb7d6-3ae3-452a-b551-283fc20d9253", "5678", 987654321);
+            User user4 = new User("eb311901-4582-481a-b697-13b52e4d2349", "4321", 20231026);
+            User user5 = new User("c88e180e-b996-40eb-8f38-98abc8db2ba1", "8765", 14101223);
+            User user6 = new User("f3b5228d-937f-4407-af03-d0bce35ae269", "0101", 1993);
 
             users.Add(currentUser);
             users.Add(user1);
@@ -271,7 +271,7 @@ namespace L2___Cash_Machine
 
             foreach (User user in users)
             {
-                result.AppendLine($"{user.CardNumber}, PIN: {user.PIN}, Balance: {user.Balance}, Daily Limit: {user.DailyLimit}");
+                result.AppendLine($"{user.CardNumber}, PIN: {user.PIN}, Balance: {user.Balance}, CARD: {user.CardNumber}");
             }
 
             return result.ToString();

@@ -16,18 +16,18 @@ namespace L2___Cash_Machine
         public string PIN { get; set; }
         public int Balance { get; set; }
         //public int TransactionHistory { get; set; }
-        public int DailyLimit { get; set; }
+        //public int DailyLimit { get; set; }
 
 
 
         //CONSTRUCTORS
 
-        public User(string cardNumber, string pin, int balance, int dailyLimit)
+        public User(string cardNumber, string pin, int balance)
         {
             CardNumber = cardNumber;
             PIN = pin;
             Balance = balance;
-            DailyLimit = dailyLimit;
+            //DailyLimit = dailyLimit;
         }
 
 
@@ -43,8 +43,9 @@ namespace L2___Cash_Machine
         public bool DailyLimitReached()
         {
             bool isLimitReached = false;
-            string transactionLogFile = "TransactionHistoryLog.txt";
+            string transactionLogFile = $"TransactionHistoryLog-{CardNumber}.txt";
             DateTime currentDate = DateTime.Now.Date;
+            int dailyLimit = 0;
 
             if (File.Exists(transactionLogFile))
             {
@@ -54,17 +55,19 @@ namespace L2___Cash_Machine
                 // Calculate number of transactions for current day
                 foreach (string logEntry in logEntries)
                 {
+
                     if (logEntry.StartsWith(currentDate.ToString("yyyy-MM-dd")))
                     {
-                        DailyLimit++;
+                        dailyLimit++;
                     }
-                    else { DailyLimit = 0; } //?reset dailylimit?
+                    // else { dailyLimit = 0; } //?reset dailylimit?
                 }
             }
-            if (DailyLimit == 10)
+            if (dailyLimit >= 10)//daugiau lygu del propgramavimo netyciuku
             {
                 isLimitReached = true;
             }
+
 
 
             return isLimitReached;
@@ -98,10 +101,10 @@ namespace L2___Cash_Machine
             else
             {
 
-                if (howMuchWithdraw <= Balance && DailyLimitReached() == false)
+                if (howMuchWithdraw <= Balance && !DailyLimitReached())//DailyLimitReached() == false
                 {
                     DateTime currentTime = DateTime.Now.Date;
-                    string transactionLogFile = "TransactionHistoryLog.txt";
+                    string transactionLogFile = $"TransactionHistoryLog-{CardNumber}.txt";
 
                     Console.WriteLine($" Withrawing {howMuchWithdraw} from the Balance of {Balance}");
                     Balance -= howMuchWithdraw;
@@ -109,9 +112,8 @@ namespace L2___Cash_Machine
                     //TransactionHistory++;
 
 
-                    DailyLimit++;
                     //log transaction
-                    string logEntry = $"{currentTime:yyyy-MM-dd} - Withdrawal: ${howMuchWithdraw}, Remaining Balance: ${Balance}";
+                    string logEntry = $"{currentTime:yyyy-MM-dd} - Withdrawal: ${howMuchWithdraw}, Remaining Balance: ${Balance}, CARD: {CardNumber}";
                     // Append the log entry to the transaction history file
 
                     using (StreamWriter writer = File.AppendText(transactionLogFile))
@@ -128,18 +130,22 @@ namespace L2___Cash_Machine
 
         public void PrintRecentTransactions()
         {
-            string logFileName = "TransactionHistoryLog.txt";
+            string logFileName = $"TransactionHistoryLog-{CardNumber}.txt";
+
 
             try
             {
                 if (File.Exists(logFileName))
                 {
                     string[] logEntries = File.ReadAllLines(logFileName);
-                    int startIndex = logEntries.Length - 5;//imam nuo paskutines vietos #5 israsa
+                    int startIndex = 0;
+                    if (logEntries.Length >= 5)
+                    {
+                        startIndex = logEntries.Length - 5;
+                    }
 
 
                     Console.WriteLine("5 MOST RECENT TRANSACTIONS: ");
-
                     for (int i = startIndex; i < logEntries.Length; i++)
                     {
                         Console.WriteLine(logEntries[i]);
@@ -165,19 +171,25 @@ namespace L2___Cash_Machine
             catch (FormatException ex) { Console.WriteLine(ex.Message); }
             catch (InvalidCastException ex) { Console.WriteLine(ex.Message); }
 
-            Console.WriteLine($" Depositting {howMuchDeposit} to the Balance of {Balance}");
+            Console.WriteLine($"Depositting {howMuchDeposit} to the Balance of {Balance}");
             Balance += howMuchDeposit;
             ShowBalance();
 
 
             DateTime currentTime = DateTime.Now.Date;
-            string transactionLogFile = "TransactionHistoryLog.txt";
+            string transactionLogFileMaster = "TransactionHistoryLog.txt";
+            string transactionLogFileSeperate = $"TransactionHistoryLog-{CardNumber}.txt";
 
             //log transaction
-            string logEntry = $"{currentTime:yyyy-MM-dd} - Deposit: ${howMuchDeposit}, Remaining Balance: ${Balance}";
+            string logEntry = $"{currentTime:yyyy-MM-dd} - Deposit: ${howMuchDeposit}, Remaining Balance: ${Balance}, CARD: {CardNumber}";
             // Append the log entry to the transaction history file
 
-            using (StreamWriter writer = File.AppendText(transactionLogFile))
+            using (StreamWriter writer = File.AppendText(transactionLogFileMaster))
+            {
+                writer.WriteLine(logEntry);
+            }
+
+            using (StreamWriter writer = File.AppendText(transactionLogFileSeperate))
             {
                 writer.WriteLine(logEntry);
             }
