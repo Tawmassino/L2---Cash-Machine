@@ -182,6 +182,7 @@ namespace L2___Cash_Machine
 
         public static void Menu(User userSelected)
         {
+            Console.Clear();
             Console.WriteLine(
                 "╔══════════════════════════════════════════╗" + "\r\n" +
                 "║        WELCOME TO YOUR ATM               ║\r\n" +
@@ -198,27 +199,53 @@ namespace L2___Cash_Machine
                 "╚══════════════════════════════════════════╝");
 
             string userMenuChoice = Console.ReadLine();
-            switch (userMenuChoice)
-            {
-                case ("1"):
-                    userSelected.ShowBalance();
-                    break;
-                case ("2"):
-                    userSelected.PrintRecentTransactions();
-                    break;
-                case ("3"):
-                    userSelected.Withdraw();
-                    break;
-                case ("4"):
-                    userSelected.Deposit();
-                    break;
-                case ("5"):
-                    Quit();
-                    break;
-                case ("quit"):
-                    Quit();
-                    break;
 
+            while (true)
+            {
+                switch (userMenuChoice)
+                {
+                    case ("1"):
+                        userSelected.ShowBalance();
+                        Console.WriteLine("menu = type menu");
+                        Console.WriteLine("quit = type menu");
+                        userMenuChoice = Console.ReadLine();
+                        break;
+                    case ("2"):
+                        userSelected.PrintRecentTransactions();
+                        Console.WriteLine("menu = type menu");
+                        Console.WriteLine("quit = type menu");
+                        userMenuChoice = Console.ReadLine();
+                        break;
+                    case ("3"):
+                        userSelected.Withdraw();
+                        Console.WriteLine("menu = type menu");
+                        Console.WriteLine("quit = type menu");
+                        userMenuChoice = Console.ReadLine();
+                        break;
+                    case ("4"):
+                        userSelected.Deposit();
+                        Console.WriteLine("menu = type menu");
+                        Console.WriteLine("quit = type menu");
+                        userMenuChoice = Console.ReadLine();
+                        break;
+                    case ("5"):
+                        Quit();
+                        break;
+                    case ("quit"):
+                        Quit();
+                        break;
+                    case ("menu"):
+                        Menu(userSelected);
+                        break;
+                    case ("m"):
+                        Menu(userSelected);
+                        break;
+                    default:
+                        Console.WriteLine("Type in the NUMBER of the operation");
+                        userMenuChoice = Console.ReadLine();
+                        break;
+
+                }
             }
         }
 

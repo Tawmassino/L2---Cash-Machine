@@ -48,10 +48,10 @@ namespace L2___Cash_Machine
 
             if (File.Exists(transactionLogFile))
             {
-                // Read the log file
+                // Read log file
                 string[] logEntries = File.ReadAllLines(transactionLogFile);
 
-                // Calculate the number of transactions for the current day
+                // Calculate number of transactions for current day
                 foreach (string logEntry in logEntries)
                 {
                     if (logEntry.StartsWith(currentDate.ToString("yyyy-MM-dd")))
@@ -129,19 +129,24 @@ namespace L2___Cash_Machine
         public void PrintRecentTransactions()
         {
             string logFileName = "TransactionHistoryLog.txt";
-            if (File.Exists(logFileName))
+
+            try
             {
-                string[] logEntries = File.ReadAllLines(logFileName);
-                int startIndex = logEntries.Length - 5;//imam nuo paskutines vietos #5 israsa
-
-
-                Console.WriteLine("5 MOST RECENT TRANSACTIONS: ");
-
-                for (int i = startIndex; i < logEntries.Length; i++)
+                if (File.Exists(logFileName))
                 {
-                    Console.WriteLine(logEntries[i]);
+                    string[] logEntries = File.ReadAllLines(logFileName);
+                    int startIndex = logEntries.Length - 5;//imam nuo paskutines vietos #5 israsa
+
+
+                    Console.WriteLine("5 MOST RECENT TRANSACTIONS: ");
+
+                    for (int i = startIndex; i < logEntries.Length; i++)
+                    {
+                        Console.WriteLine(logEntries[i]);
+                    }
                 }
             }
+            catch (IndexOutOfRangeException e) { Console.WriteLine(e.Message); }
         }
 
         public void Deposit()
