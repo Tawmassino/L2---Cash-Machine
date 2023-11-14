@@ -108,7 +108,7 @@ namespace L2___Cash_Machine
             Console.Clear();
             if (loggedIn)
             {
-                // You can now access the user who has logged in using userSelected
+                // access user who logged in using userSelected
                 Console.WriteLine("User has logged in: " + userSelected.CardNumber);
                 Console.WriteLine("Press any key to continue");
                 Console.ReadLine();
@@ -183,7 +183,7 @@ namespace L2___Cash_Machine
         public static void Menu(User userSelected)
         {
             Console.Clear();
-            Console.WriteLine(
+            Console.WriteLine(//verbatim -@
                 "╔══════════════════════════════════════════╗" + "\r\n" +
                 "║        WELCOME TO YOUR ATM               ║\r\n" +
                 "║                                          ║\r\n" +
@@ -197,7 +197,12 @@ namespace L2___Cash_Machine
                 "║   the number, then press [Enter].        ║\r\n" +
                 "║                                          ║\r\n" +
                 "╚══════════════════════════════════════════╝");
+            //            Console.WriteLine(@"oijeawqodi jsf98j 32r9u h9
 
+            //asdasd fasd feg 5t 389i7h 
+            //3290r8h349tu3ngwp-gnu
+            // 54g 9w047 hg90-wgjn87w g-jw8 g g
+            //");
             string userMenuChoice = Console.ReadLine();
 
             while (true)

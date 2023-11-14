@@ -56,7 +56,7 @@ namespace L2___Cash_Machine
                 foreach (string logEntry in logEntries)
                 {
 
-                    if (logEntry.StartsWith(currentDate.ToString("yyyy-MM-dd")))
+                    if (logEntry.StartsWith(currentDate.ToString("yyyy-MM-dd")))//parse i DateTime
                     {
                         dailyLimit++;
                     }
